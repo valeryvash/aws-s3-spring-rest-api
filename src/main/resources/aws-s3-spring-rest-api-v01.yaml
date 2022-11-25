@@ -44,6 +44,8 @@ paths:
           $ref: '#/components/responses/ApiResponseStatusException'
         401:
           $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/AccessError'
         500:
           $ref: '#/components/responses/ApiResponseStatusException'
   /api/v1/auth/signin:
@@ -86,6 +88,8 @@ paths:
           $ref: '#/components/responses/ApiResponseStatusException'
         401:
           $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/AccessError'
         500:
           $ref: '#/components/responses/ApiResponseStatusException'
 
@@ -125,7 +129,7 @@ paths:
     delete:
       security:
         - BearerAuth:
-            - read
+            - write
       tags:
         - files
       parameters:
@@ -142,163 +146,69 @@ paths:
           $ref: '#/components/responses/ApiResponseStatusException'
         401:
           $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/AccessError'
         500:
           $ref: '#/components/responses/ApiResponseStatusException'
 
-
-
-  /users/{userId}:
-    get:
-      tags:
-        - users
-      summary: Get user info
-      description: Get user info with event collection
-      operationId: getUserById
-      parameters:
-        - name: userId
-          in: path
-          description: Corresponding id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          $ref: '#/components/responses/UserPostResponseBody'
-        404:
-          description: User not found
-    delete:
-      tags:
-        - users
-      summary: Delete user
-      description: Delete user by id
-      operationId: deleteUserById
-      parameters:
-        - name: userId
-          in: path
-          description: Corresponding id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          $ref: '#/components/responses/UserPostResponseBody'
-        404:
-          description: User not found
-  /events/{eventId}:
-    get:
-      tags:
-        - events
-      description: Get event info
-      operationId: getEventById
-      parameters:
-        - name: eventId
-          in: path
-          description: Corresponding id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          $ref: '#/components/responses/EventGetResponseBody'
-        404:
-          description: Event not found
-  /files:
-    post:
-      tags:
-        - files
-      description: Add new file to the user
-      operationId: addFile
-      requestBody:
-        $ref: '#/components/requestBodies/FilePostRequestBody'
-      responses:
-        201:
-          $ref: '#/components/responses/FilePostResponseBody'
-    get:
-      tags:
-        - files
-      description: Get all files info
-      operationId: getFiles
-      responses:
-        200:
-          $ref: '#/components/responses/FileGetAllPostResponseBody'
-    put:
-      tags:
-        - files
-      description: Update file info
-      operationId: updateFile
-      requestBody:
-        $ref: '#/components/responses/FilePostResponseBody'
-      responses:
-        200:
-          $ref: '#/components/responses/FilePostResponseBody'
-  /files/{fileId}:
-    get:
-      tags:
-        - files
-      description: get related file info
-      operationId: getFileById
-      parameters:
-        - name: fileId
-          in: path
-          description: related file id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          $ref: '#/components/schemas/File'
-    delete:
-      tags:
-        - files
-      description: Change file event evenType to  DELETED. File will not be physically removed from persisted context.
-      operationId: deleteFileById
-      parameters:
-        - name: fileId
-          in: path
-          description: related file id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          $ref: '#/components/schemas/File'
 components:
   schemas:
-    ApiResponse:
-      description: A json object response
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int
-          example: 200
-        message:
-          type: string
-          example: 'Something goes wrong message'
-    User:
+    BaseEntity:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        name:
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - NOT_ACTIVE
+            - DELETED
+          default: ACTIVE
+    Role:
+      type: object
+      properties:
+        entity:
+          $ref: '#/components/schemas/BaseEntity'
+        roleName:
+          type: string
+    User:
+      type: object
+      properties:
+        entity:
+          $ref: '#/components/schemas/BaseEntity'
+        userName:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
           type: string
         events:
           type: array
           items:
             $ref: '#/components/schemas/Event'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
     Event:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        timeStamp:
+        created:
           type: string
           format: date-time
         eventType:
@@ -309,6 +219,7 @@ components:
       type: string
       enum:
         - CREATED
+        - DOWNLOADED
         - DELETED
       default:
         - CREATED
@@ -368,77 +279,6 @@ components:
               - userName
               - password
 
-
-    UserPutRequestBody:
-      description: Body for user name and/or event collection update
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-              name:
-                type: string
-                example: 'SomeName'
-              events:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      format: int64
-                    timeStamp:
-                      type: string
-                      format: date-time
-                    evenType:
-                      type: string
-                      description: 'Event type'
-                      default: 'CREATED'
-                      enum:
-                        - 'CREATED'
-                        - 'DELETED'
-                    fileId:
-                      type: integer
-                      format: int64
-                    fileName:
-                      type: string
-                    filePath:
-                      type: string
-            required:
-              - id
-              - name
-          example:
-            id: 1
-            name: 'user'
-            events:
-              id: 55
-              timeStamp: 'Aug 13, 2022, 8:58:52 PM'
-              evenType: 'CREATED'
-              fileId: 75
-              fileName: 'secrets.txt'
-
-              filePath: '//home/'
-    FilePostRequestBody:
-      description: Body for new file creation for user
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                example: 'SomeFileName'
-              filePath:
-                type: string
-                example: "//home/"
-              userId:
-                type: integer
-                format: int64
-                description: related user id
-
   responses:
     UserSignUpResponseDTO:
       description: Successful operation
@@ -466,10 +306,10 @@ components:
               - id
               - userName
               - email
-
     UnauthorizedError:
      description: Access token is missing or invalid
-
+    AccessError:
+     description: Access level error
     UserSignInResponseDTO:
       description: Successful operation
       headers:
@@ -513,38 +353,6 @@ components:
                       format: date-time
                     fileName:
                       type: string
-
-
-    EventGetResponseBody:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Event"
-    FilePostResponseBody:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-              name:
-                type: string
-                example: 'SomeName'
-              filePath:
-                type: string
-                example: '//home/'
-    FileGetAllPostResponseBody:
-      description: Successful operation
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/File"
     ApiResponseStatusException:
       description: A json object response while handled exception occurred
       content:
@@ -569,8 +377,6 @@ components:
               path:
                 type: string
                 example: api/v1/auth
-
-
   securitySchemes:
     bearerAuth:
       type: http
