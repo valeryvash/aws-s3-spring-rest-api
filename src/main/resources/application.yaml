@@ -1,0 +1,61 @@
+# Tip. For unix based system no difference between dots and underscores in variable name.
+# Example: Dots "." used here, underscores "_" used in unix system.
+
+# Server system environment variables
+server:
+  port: 9090
+  # Shall be turned off in real projects. Reason is potential information's leak to client
+  error:
+    include-exception: true
+    include-message: always
+
+# Credentials for aws s3 file storage system
+cloud:
+  aws:
+    credentials:
+      access-key: ${vash.access.key}
+      secret-key: ${vash.secret.key}
+    region:
+      static: ${vash.region.static}
+    stack:
+      auto: false
+    service:
+      endpoint: ${vash.service.endpoint}
+
+application:
+  bucket:
+    name: ${vash.bucket.name}
+
+# Multipart related variables
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2MB
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+# Data related variables
+  datasource:
+    driver-class-name: ${vash.datasource.driver}
+    url: ${vash.datasource.url}
+    username: ${vash.datasource.username}
+    password: ${vash.datasource.password}
+  jpa:
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration/flyway
+    installed-by: ValeryVaSh
+    baseline-on-migrate: true
+    schemas: aws-s3-spring-rest-api
+
+# Jwt token variables
+jwt:
+  token:
+    secret: ${vash.jwt.token.secret}
+    expired: 3600000

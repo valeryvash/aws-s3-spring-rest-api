@@ -1,0 +1,578 @@
+openapi: 3.0.3
+info:
+  title: aws s3 spring rest api - v01
+  description: There is an empty description for my 2nd homework app
+  version: 1.0.0
+  contact:
+    name: Valery Shestak
+    email: shestak.valery@gmail.com
+    url: https://github.com/valeryvash
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+servers:
+  - url: 'http://localhost:9090'
+    description: Local host test server
+tags:
+  - name: users
+    description: Operations about users
+  - name: events
+    description: Operations about events
+  - name: files
+    description: Operations about files
+security:
+  - bearerAuth:
+      - read
+      - write
+paths:
+  /api/v1/auth/signup:
+    post:
+      security:
+        - BearerAuth:
+            - write
+      tags:
+        - users
+      summary: Create a new one user
+      description: Register a new one user with default 'user' role.
+      operationId: addUser
+      requestBody:
+        $ref: '#/components/requestBodies/UserSignUpRequestDTO'
+      responses:
+        201:
+          $ref: '#/components/responses/UserSignUpResponseDTO'
+        400:
+          $ref: '#/components/responses/ApiResponseStatusException'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/ApiResponseStatusException'
+  /api/v1/auth/signin:
+    post:
+      tags:
+        - users
+      summary: Login user endpoint
+      description: Create a jwt token for the user/pass pair
+      operationId: signInUser
+      requestBody:
+        $ref: '#/components/requestBodies/UserSignInRequestDTO'
+      responses:
+        201:
+          $ref: '#/components/responses/UserSignInResponseDTO'
+        400:
+          $ref: '#/components/responses/ApiResponseStatusException'
+        404:
+          $ref: '#/components/responses/ApiResponseStatusException'
+
+  /events/{userName}:
+    get:
+      security:
+        - BearerAuth:
+            - read
+      tags:
+        - events
+      description: Get event info
+      operationId: getEventByUserName
+      parameters:
+        - name: userName
+          in: path
+          description: Corresponding name of user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: '#/components/responses/UserEventsResponseDTO'
+        400:
+          $ref: '#/components/responses/ApiResponseStatusException'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/ApiResponseStatusException'
+
+  /api/v1/files:
+    post:
+      security:
+        - BearerAuth:
+            - read
+      tags:
+        - files
+      responses:
+
+  /api/v1/files/{fileName}:
+    get:
+      security:
+        - BearerAuth:
+            - read
+      tags:
+        - files
+      parameters:
+        - name: fileName
+          in: path
+          description: Corresponding name of file
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: '#/components/responses/ApiResponseStatusException'
+        400:
+          $ref: '#/components/responses/ApiResponseStatusException'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/ApiResponseStatusException'
+
+    delete:
+      security:
+        - BearerAuth:
+            - read
+      tags:
+        - files
+      parameters:
+        - name: fileName
+          in: path
+          description: Corresponding name of file
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: File deleted successfully
+        400:
+          $ref: '#/components/responses/ApiResponseStatusException'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        500:
+          $ref: '#/components/responses/ApiResponseStatusException'
+
+
+
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Get user info
+      description: Get user info with event collection
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: Corresponding id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: '#/components/responses/UserPostResponseBody'
+        404:
+          description: User not found
+    delete:
+      tags:
+        - users
+      summary: Delete user
+      description: Delete user by id
+      operationId: deleteUserById
+      parameters:
+        - name: userId
+          in: path
+          description: Corresponding id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: '#/components/responses/UserPostResponseBody'
+        404:
+          description: User not found
+  /events/{eventId}:
+    get:
+      tags:
+        - events
+      description: Get event info
+      operationId: getEventById
+      parameters:
+        - name: eventId
+          in: path
+          description: Corresponding id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: '#/components/responses/EventGetResponseBody'
+        404:
+          description: Event not found
+  /files:
+    post:
+      tags:
+        - files
+      description: Add new file to the user
+      operationId: addFile
+      requestBody:
+        $ref: '#/components/requestBodies/FilePostRequestBody'
+      responses:
+        201:
+          $ref: '#/components/responses/FilePostResponseBody'
+    get:
+      tags:
+        - files
+      description: Get all files info
+      operationId: getFiles
+      responses:
+        200:
+          $ref: '#/components/responses/FileGetAllPostResponseBody'
+    put:
+      tags:
+        - files
+      description: Update file info
+      operationId: updateFile
+      requestBody:
+        $ref: '#/components/responses/FilePostResponseBody'
+      responses:
+        200:
+          $ref: '#/components/responses/FilePostResponseBody'
+  /files/{fileId}:
+    get:
+      tags:
+        - files
+      description: get related file info
+      operationId: getFileById
+      parameters:
+        - name: fileId
+          in: path
+          description: related file id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: '#/components/schemas/File'
+    delete:
+      tags:
+        - files
+      description: Change file event evenType to  DELETED. File will not be physically removed from persisted context.
+      operationId: deleteFileById
+      parameters:
+        - name: fileId
+          in: path
+          description: related file id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: '#/components/schemas/File'
+components:
+  schemas:
+    ApiResponse:
+      description: A json object response
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int
+          example: 200
+        message:
+          type: string
+          example: 'Something goes wrong message'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        timeStamp:
+          type: string
+          format: date-time
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        file:
+          $ref: '#/components/schemas/File'
+    EventType:
+      type: string
+      enum:
+        - CREATED
+        - DELETED
+      default:
+        - CREATED
+    File:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        filePath:
+          type: string
+  requestBodies:
+    UserSignUpRequestDTO:
+      description: A JSON object containing user information
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                example: 'SomeName'
+              password:
+                type: string
+                example: 'somePass123'
+              firstName:
+                type: string
+                example: 'Laslo'
+              secondName:
+                type: string
+                example: 'Nilsen'
+              email:
+                type: string
+                example: 'some@email.yep'
+            required:
+              - userName
+              - password
+              - email
+    UserSignInRequestDTO:
+      description: A JSON object containing user information
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                example: 'SomeName'
+              password:
+                type: string
+                example: 'somePass123'
+            required:
+              - userName
+              - password
+
+
+    UserPutRequestBody:
+      description: Body for user name and/or event collection update
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              name:
+                type: string
+                example: 'SomeName'
+              events:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                    timeStamp:
+                      type: string
+                      format: date-time
+                    evenType:
+                      type: string
+                      description: 'Event type'
+                      default: 'CREATED'
+                      enum:
+                        - 'CREATED'
+                        - 'DELETED'
+                    fileId:
+                      type: integer
+                      format: int64
+                    fileName:
+                      type: string
+                    filePath:
+                      type: string
+            required:
+              - id
+              - name
+          example:
+            id: 1
+            name: 'user'
+            events:
+              id: 55
+              timeStamp: 'Aug 13, 2022, 8:58:52 PM'
+              evenType: 'CREATED'
+              fileId: 75
+              fileName: 'secrets.txt'
+
+              filePath: '//home/'
+    FilePostRequestBody:
+      description: Body for new file creation for user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: 'SomeFileName'
+              filePath:
+                type: string
+                example: "//home/"
+              userId:
+                type: integer
+                format: int64
+                description: related user id
+
+  responses:
+    UserSignUpResponseDTO:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              userName:
+                type: string
+                example: 'SomeName'
+              firstName:
+                type: string
+                example: 'Laslo'
+              secondName:
+                type: string
+                example: 'Nilsen'
+              email:
+                type: string
+                example: 'some@email.yep'
+            required:
+              - id
+              - userName
+              - email
+
+    UnauthorizedError:
+     description: Access token is missing or invalid
+
+    UserSignInResponseDTO:
+      description: Successful operation
+      headers:
+        Authorization: Bearer_<token>
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                example: 'SomeName'
+              token:
+                type: string
+                example: 'dfgdfg_dfgdfg...dfdsf'
+            required:
+              - userName
+              - token
+
+    UserEventsResponseDTO:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              events:
+                type: array
+                items:
+                  properties:
+                    eventType:
+                      type: string
+                      enum:
+                        - created
+                        - downloaded
+                        - deleted
+                    created:
+                      type: string
+                      format: date-time
+                    fileName:
+                      type: string
+
+
+    EventGetResponseBody:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Event"
+    FilePostResponseBody:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              name:
+                type: string
+                example: 'SomeName'
+              filePath:
+                type: string
+                example: '//home/'
+    FileGetAllPostResponseBody:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/File"
+    ApiResponseStatusException:
+      description: A json object response while handled exception occurred
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+              status:
+                type: integer
+                format: int
+                example: 40*
+              error:
+                description: Error short name
+                type: string
+                example: Something not found
+              message:
+                type: string
+                example: Something not found
+              path:
+                type: string
+                example: api/v1/auth
+
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
