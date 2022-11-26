@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(
-        path = "/api/v1/files"
+        path = "/api/v1/moder/files"
 )
 public class FileControllerV1 {
 
