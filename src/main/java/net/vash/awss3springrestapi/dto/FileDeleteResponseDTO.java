@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FileUploadResponseDTO implements Serializable {
+public class FileDeleteResponseDTO implements Serializable {
     private Long id;
     private String fileName;
     private String filePath;
@@ -26,8 +26,8 @@ public class FileUploadResponseDTO implements Serializable {
     @PastOrPresent
     private Date eventCreated;
 
-    public static FileUploadResponseDTO fromEntity(File file) {
-        FileUploadResponseDTO dto = new FileUploadResponseDTO();
+    public static FileDeleteResponseDTO fromEntity(File file) {
+        FileDeleteResponseDTO dto = new FileDeleteResponseDTO();
 
         dto.setId(file.getId());
         dto.setFileName(file.getFileName());

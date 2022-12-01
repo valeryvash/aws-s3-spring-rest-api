@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUserName(String userName) {
-        User user = userRepo.findByUserNameIgnoreCase(userName);
+        User user = userRepo.findByUserName(userName);
 
         if (user == null) {
             log.warn("IN findByUserName method user not found by username : {}", userName);
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException();
         }
 
-        Role userRole = roleRepo.findByRoleNameIgnoreCase(DEFAULT_ROLE_NAME);
+        Role userRole = roleRepo.findByRoleName(DEFAULT_ROLE_NAME);
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.getRoles().add(userRole);
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException();
         }
 
-        User userToBeUpdated = userRepo.findByUserNameIgnoreCase(user.getUserName());
+        User userToBeUpdated = userRepo.findByUserName(user.getUserName());
 
         if (userToBeUpdated == null) {
             log.warn("IN update method user not found by username : {}", user.getUserName());
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteByUserName(String userName) {
-        User userToBeDeleted = userRepo.findByUserNameIgnoreCase(userName);
+        User userToBeDeleted = userRepo.findByUserName(userName);
 
         if (userToBeDeleted == null) {
             log.warn("IN deleteByUserName method user not found by username : {}", userName);
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean isUserExistByUserNameIgnoreCase(String userName) {
-        boolean result = userRepo.existsByUserNameIgnoreCase(userName);
+        boolean result = userRepo.existsByUserName(userName);
 
         log.info("IN isUserExistByUserNameIgnoreCase method result: {}", result);
 
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean isUserExistByEmailIgnoreCase(String email) {
-        boolean result = userRepo.existsByEmailIgnoreCase(email);
+        boolean result = userRepo.existsByEmail(email);
 
         log.info("IN isUserExistByUserNameIgnoreCase method result: {}", result);
 

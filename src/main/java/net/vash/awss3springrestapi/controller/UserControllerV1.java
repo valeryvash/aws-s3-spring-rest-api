@@ -90,7 +90,7 @@ public class UserControllerV1 {
             );
         }
 
-        User user;
+        User user = null;
 
         try {
             user = userService.findByUserName(userName);

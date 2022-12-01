@@ -7,9 +7,12 @@ values ('ROLE_USER'),
 insert into users (user_name, password, email, first_name, last_name)
 values ('qwerty', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'one@mail.com', 'Owen', 'Tangney'),
        ('qwerty2', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'two@mail.com', 'Lois', 'Laine'),
-       ('qwerty3', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'three@mail.com', 'Kristen', 'Stewart'),
-       ('qwerty4', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'fourth@mail.com', 'Amayak', 'Akopyan'),
-       ('qwerty5', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'fifth@mail.com', 'Sherlock', 'Homes'),
+       ('qwerty3', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'three@mail.com', 'Kristen',
+        'Stewart'),
+       ('qwerty4', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'fourth@mail.com', 'Amayak',
+        'Akopyan'),
+       ('qwerty5', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'fifth@mail.com', 'Sherlock',
+        'Homes'),
        ('qwerty6', '$2a$12$GO2h0oSsyiDA.BDVDiPqNuY80q8YeLUlwe7ERYRGInHDcKovx4mvS', 'six@mail.com', 'Valery', 'VaSh');
 
 # Create views for role id

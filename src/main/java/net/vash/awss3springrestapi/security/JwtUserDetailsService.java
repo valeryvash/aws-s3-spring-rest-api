@@ -23,7 +23,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User loadedUser = userRepo.findByUserNameIgnoreCase(username);
+        User loadedUser = userRepo.findByUserName(username);
 
         if (loadedUser == null) {
             log.warn("IN loadUserByUsername method user not found by userName: {}", username);

@@ -1,18 +1,16 @@
 package net.vash.awss3springrestapi.controller;
 
 import net.vash.awss3springrestapi.controller.authFacade.AuthFacade;
-import net.vash.awss3springrestapi.dto.FileUploadResponseDTO;
 import net.vash.awss3springrestapi.model.EventType;
 import net.vash.awss3springrestapi.model.File;
 import net.vash.awss3springrestapi.service.FileService;
-import net.vash.awss3springrestapi.service.StorageService;
 import net.vash.awss3springrestapi.service.exceptions.FileSaveException;
 import net.vash.awss3springrestapi.service.exceptions.UserNotFoundException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,12 +23,10 @@ public class FileControllerV1 {
 
     private final FileService fileService;
     private final StorageService storageService;
-    private final AuthFacade authFacade;
 
-    public FileControllerV1(FileService fileService, StorageService storageService, AuthFacade authFacade) {
+    public FileControllerV1(FileService fileService, StorageService storageService) {
         this.fileService = fileService;
         this.storageService = storageService;
-        this.authFacade = authFacade;
     }
 
     @PostMapping(
@@ -39,18 +35,10 @@ public class FileControllerV1 {
     )
     public ResponseEntity<FileUploadResponseDTO> uploadFile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("fileName") String fileName
+            @RequestParam("fileName") String fileName,
+            Authentication authentication
     ) {
-
-        if (file == null || file.isEmpty() ||
-            fileName == null || fileName.isEmpty() || fileName.isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "File or fileName shall not be null or empty"
-            );
-        }
-
-        String userName = getLoggedUsernameOrThrownException();
+        String userName = authentication.getName();
 
         boolean isFileUploadedSuccessfully = storageService.uploadFile(file, fileName);
 

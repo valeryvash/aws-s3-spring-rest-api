@@ -1,5 +1,6 @@
 package net.vash.awss3springrestapi.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import net.vash.awss3springrestapi.dto.UserEventsResponseDTO;
 import net.vash.awss3springrestapi.dto.UserSignInResponseDTO;
@@ -23,43 +24,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping(
-        path = "/api/v1/admin",
+        path = "/api/v1",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
+@RequiredArgsConstructor
 public class EventControllerV1 {
 
     private final EventService eventService;
-
-    public EventControllerV1(EventService eventService) {
-        this.eventService = eventService;
-    }
-
-    /**
-     * TODO shall be removed
-     * Test access endpoint
-     * @return
-     */
-    @GetMapping(
-            path = "/events",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<UserSignInResponseDTO> getEventsByUserName() {
-        val responseDto = new UserSignInResponseDTO();
-
-        responseDto.setUserName("hello");
-        responseDto.setToken("hello");
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(responseDto);
-    }
 
     @GetMapping(
             path = "/events/{userName}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasRole(ADMINISTRATOR)")
     public ResponseEntity<UserEventsResponseDTO> getEventsByUserName(@PathVariable String userName) {
         List<Event> eventList = null;
+
         try {
             eventList = eventService.getEventsByUserName(userName);
         } catch (IllegalArgumentException e) {
@@ -70,7 +50,7 @@ public class EventControllerV1 {
         } catch (EventRepositoryException e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Something wrong with datalayer"
+                    "Something goes wrong with a datalayer"
             );
         }
 

@@ -40,11 +40,11 @@ class EventServiceImplTest {
 
     @Test
     void getEventsByUserNameRepoThrowsException() {
-        when(eventRepo.findByUser_UserNameIgnoreCase(anyString())).thenThrow(RuntimeException.class);
+        when(eventRepo.findByUser_UserName(anyString())).thenThrow(RuntimeException.class);
 
         assertThrows(RuntimeException.class, () -> eventService.getEventsByUserName("some user name"));
 
-        verify(eventRepo, times(1)).findByUser_UserNameIgnoreCase(anyString());
+        verify(eventRepo, times(1)).findByUser_UserName(anyString());
         verifyNoMoreInteractions(eventRepo);
     }
 
@@ -53,13 +53,13 @@ class EventServiceImplTest {
         int size = 10;
         events = (List<Event>) mock(List.class);
         when(events.size()).thenReturn(size);
-        when(eventRepo.findByUser_UserNameIgnoreCase(anyString())).thenReturn(events);
+        when(eventRepo.findByUser_UserName(anyString())).thenReturn(events);
 
         List<Event> returnedCollection = eventService.getEventsByUserName(anyString());
 
         assertSame(returnedCollection, events);
 
-        verify(eventRepo, times(1)).findByUser_UserNameIgnoreCase(anyString());
+        verify(eventRepo, times(1)).findByUser_UserName(anyString());
         verifyNoMoreInteractions(eventRepo);
     }
 }

@@ -26,17 +26,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public File addFileForUserByUserName(File file, String userName) {
-        if (userName == null || file == null) {
-            log.warn("IN addFileForUserByUserName method null argument passed");
-            throw new IllegalArgumentException();
-        }
-
-        User userFilesToBeUpdated = userRepo.findByUserNameIgnoreCase(userName);
-
-        if (userFilesToBeUpdated == null) {
-            log.warn("IN addFileForUserByUserName user not found for username: {} ", userName);
-            throw new UserNotFoundException();
-        }
+        User userFilesToBeUpdated = userRepo.findByUserName(userName);
 
         try {
             file.getEvent().setUser(userFilesToBeUpdated);
@@ -49,4 +39,8 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
+    public File getFileById(Long fileId) {
+        return fileRepo.findById(fileId).orElse(null);
+    }
 }

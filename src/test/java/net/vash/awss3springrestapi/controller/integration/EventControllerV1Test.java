@@ -56,14 +56,10 @@ public class EventControllerV1Test {
 
     @BeforeEach
     public void setUp() throws Exception {
-//        Filter[] filters = filterChain.getFilters().toArray(new Filter[filterChain.getFilters().size()]);
-
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
-//                .addFilters(filters)
                 .apply(springSecurity())
                 .build();
-
     }
 
     @Test

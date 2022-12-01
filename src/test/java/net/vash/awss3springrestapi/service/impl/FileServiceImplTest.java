@@ -59,23 +59,23 @@ class FileServiceImplTest {
 
     @Test
     void addFileForUserByUserNameThrowsExceptionForNotExistedUser() {
-        when(userRepo.findByUserNameIgnoreCase(anyString())).thenReturn(null);
+        when(userRepo.findByUserName(anyString())).thenReturn(null);
 
         assertThrows(RuntimeException.class, () -> fileService.addFileForUserByUserName(file, "some_user_name"));
 
-        verify(userRepo, times(1)).findByUserNameIgnoreCase(anyString());
+        verify(userRepo, times(1)).findByUserName(anyString());
         verifyNoMoreInteractions(userRepo);
         verifyNoInteractions(fileRepo);
     }
 
     @Test
     void addFileForUserByUserNameThrowsFileSaveException() {
-        when(userRepo.findByUserNameIgnoreCase(anyString())).thenReturn(tempUser);
+        when(userRepo.findByUserName(anyString())).thenReturn(tempUser);
         when(fileRepo.save(any(File.class))).thenThrow(RuntimeException.class);
 
         assertThrows(RuntimeException.class, () -> fileService.addFileForUserByUserName(file,"someUserName"));
 
-        verify(userRepo, times(1)).findByUserNameIgnoreCase(anyString());
+        verify(userRepo, times(1)).findByUserName(anyString());
         verifyNoMoreInteractions(userRepo);
         verify(fileRepo, times(1)).save(any(File.class));
         verifyNoMoreInteractions(fileRepo);
@@ -83,12 +83,12 @@ class FileServiceImplTest {
 
     @Test
     void addFileForUserByUserName() {
-        when(userRepo.findByUserNameIgnoreCase(anyString())).thenReturn(tempUser);
+        when(userRepo.findByUserName(anyString())).thenReturn(tempUser);
         when(fileRepo.save(any(File.class))).thenReturn(file);
 
         fileService.addFileForUserByUserName(file, "some_userName");
 
-        verify(userRepo, times(1)).findByUserNameIgnoreCase(anyString());
+        verify(userRepo, times(1)).findByUserName(anyString());
         verifyNoMoreInteractions(userRepo);
         verify(fileRepo, times(1)).save(any(File.class));
         verifyNoMoreInteractions(fileRepo);

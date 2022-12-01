@@ -47,23 +47,23 @@ class UserServiceImplTest {
 
     @Test
     void findByUserName() {
-        when(userRepo.findByUserNameIgnoreCase(isNull())).thenReturn(null);
+        when(userRepo.findByUserName(isNull())).thenReturn(null);
 
         assertThrows(RuntimeException.class, () -> userService.findByUserName(null));
 
-        verify(userRepo,times(1)).findByUserNameIgnoreCase(isNull());
+        verify(userRepo,times(1)).findByUserName(isNull());
 
 
-        when(userRepo.findByUserNameIgnoreCase(any(String.class))).thenReturn(tempUser);
+        when(userRepo.findByUserName(any(String.class))).thenReturn(tempUser);
 
         assertDoesNotThrow(() -> userService.findByUserName("someName"));
 
-        verify(userRepo,times(1)).findByUserNameIgnoreCase(isNotNull());
+        verify(userRepo,times(1)).findByUserName(isNotNull());
     }
 
     @Test
     void singUpNullArg() {
-        when(roleRepo.findByRoleNameIgnoreCase(anyString())).thenReturn(tempRole);
+        when(roleRepo.findByRoleName(anyString())).thenReturn(tempRole);
 
         when(userRepo.save(isNull())).thenThrow(RuntimeException.class);
 
@@ -107,67 +107,67 @@ class UserServiceImplTest {
 
     @Test
     void updateUserNotFoundInRepo() {
-        when(userRepo.findByUserNameIgnoreCase(anyString())).thenReturn(null);
+        when(userRepo.findByUserName(anyString())).thenReturn(null);
 
         assertThrows(RuntimeException.class, () -> userService.update(tempUser));
 
-        verify(userRepo, times(1)).findByUserNameIgnoreCase(anyString());
+        verify(userRepo, times(1)).findByUserName(anyString());
         verifyNoMoreInteractions(userRepo);
     }
 
     @Test
     void updateFailsWhenFieldsAlreadyExist() {
-        when(userRepo.findByUserNameIgnoreCase(anyString())).thenReturn(tempUser);
+        when(userRepo.findByUserName(anyString())).thenReturn(tempUser);
         when(userRepo.save(tempUser)).thenThrow(RuntimeException.class);
 
         assertThrows(RuntimeException.class, () -> userService.update(tempUser));
 
-        verify(userRepo, times(1)).findByUserNameIgnoreCase(anyString());
+        verify(userRepo, times(1)).findByUserName(anyString());
         verify(userRepo, times(1)).save(any(User.class));
         verifyNoMoreInteractions(userRepo);
     }
 
     @Test
     void deleteByUserNameNullArgument() {
-        when(userRepo.findByUserNameIgnoreCase(isNull())).thenReturn(null);
+        when(userRepo.findByUserName(isNull())).thenReturn(null);
 
         assertThrows(RuntimeException.class, () -> userService.deleteByUserName(null));
 
-        verify(userRepo, times(1)).findByUserNameIgnoreCase(isNull());
+        verify(userRepo, times(1)).findByUserName(isNull());
         verifyNoMoreInteractions(userRepo);
     }
 
     @Test
     void deleteByUserNameStorageException() {
-        when(userRepo.findByUserNameIgnoreCase(anyString())).thenReturn(tempUser);
+        when(userRepo.findByUserName(anyString())).thenReturn(tempUser);
         doThrow(RuntimeException.class).when(userRepo).delete(any(User.class));
 
         assertThrows(RuntimeException.class, () -> userService.deleteByUserName("someString"));
 
-        verify(userRepo, times(1)).findByUserNameIgnoreCase(anyString());
+        verify(userRepo, times(1)).findByUserName(anyString());
         verify(userRepo,times(1)).delete(any(User.class));
         verifyNoMoreInteractions(userRepo);
     }
 
     @Test
     void deleteByUserName() {
-        when(userRepo.findByUserNameIgnoreCase(anyString())).thenReturn(tempUser);
+        when(userRepo.findByUserName(anyString())).thenReturn(tempUser);
         doNothing().when(userRepo).delete(any(User.class));
 
         assertSame(tempUser, userService.deleteByUserName("someString"));
 
-        verify(userRepo, times(1)).findByUserNameIgnoreCase(anyString());
+        verify(userRepo, times(1)).findByUserName(anyString());
         verify(userRepo,times(1)).delete(any(User.class));
         verifyNoMoreInteractions(userRepo);
     }
 
     @Test
     void existsMethods() {
-        when(userRepo.existsByUserNameIgnoreCase(anyString())).thenReturn(true);
-        when(userRepo.existsByUserNameIgnoreCase(isNull())).thenReturn(false);
+        when(userRepo.existsByUserName(anyString())).thenReturn(true);
+        when(userRepo.existsByUserName(isNull())).thenReturn(false);
 
-        when(userRepo.existsByEmailIgnoreCase(anyString())).thenReturn(true);
-        when(userRepo.existsByEmailIgnoreCase(isNull())).thenReturn(false);
+        when(userRepo.existsByEmail(anyString())).thenReturn(true);
+        when(userRepo.existsByEmail(isNull())).thenReturn(false);
 
         userService.isUserExistByEmailIgnoreCase("non_null");
         userService.isUserExistByEmailIgnoreCase(null);
@@ -175,10 +175,10 @@ class UserServiceImplTest {
         userService.isUserExistByUserNameIgnoreCase("non_null");
         userService.isUserExistByUserNameIgnoreCase(null);
 
-        verify(userRepo, times(1)).existsByEmailIgnoreCase(anyString());
-        verify(userRepo, times(1)).existsByEmailIgnoreCase(isNull());
-        verify(userRepo, times(1)).existsByUserNameIgnoreCase(anyString());
-        verify(userRepo, times(1)).existsByUserNameIgnoreCase(isNull());
+        verify(userRepo, times(1)).existsByEmail(anyString());
+        verify(userRepo, times(1)).existsByEmail(isNull());
+        verify(userRepo, times(1)).existsByUserName(anyString());
+        verify(userRepo, times(1)).existsByUserName(isNull());
         verifyNoMoreInteractions(userRepo);
     }
 

@@ -88,7 +88,7 @@ public class JwtUser implements UserDetails {
         return this.enabled;
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 

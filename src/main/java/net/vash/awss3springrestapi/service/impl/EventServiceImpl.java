@@ -27,7 +27,7 @@ public class EventServiceImpl implements EventService {
         }
 
         try {
-            List<Event> events = eventRepo.findByUser_UserNameIgnoreCase(userName);
+            List<Event> events = eventRepo.findByUser_UserName(userName);
             log.info("IN getEventsByUserName method events found successfully. Collection size: {}", events.size());
             return events;
         } catch (RuntimeException e) {
