@@ -36,7 +36,7 @@ public class EventControllerV1 {
             path = "/events/{userName}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasRole(ADMINISTRATOR)")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<UserEventsResponseDTO> getEventsByUserName(@PathVariable String userName) {
         List<Event> eventList = null;
 

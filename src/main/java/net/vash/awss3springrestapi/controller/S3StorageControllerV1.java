@@ -3,6 +3,7 @@ package net.vash.awss3springrestapi.controller;
 import lombok.RequiredArgsConstructor;
 import net.vash.awss3springrestapi.dto.FileDeleteResponseDTO;
 import net.vash.awss3springrestapi.dto.FileUploadResponseDTO;
+import net.vash.awss3springrestapi.dto.S3StorageServiceFileDownloadDTO;
 import net.vash.awss3springrestapi.model.File;
 import net.vash.awss3springrestapi.service.S3Storage;
 import org.springframework.core.io.ByteArrayResource;
@@ -30,7 +31,7 @@ public class S3StorageControllerV1 {
             path = "",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasRole(MODERATOR)")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<FileUploadResponseDTO> uploadFile(
             @RequestParam("file") MultipartFile multipartFile,
             @RequestParam("filePath") String filePath,
@@ -52,7 +53,7 @@ public class S3StorageControllerV1 {
             path = "/{fileId}",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
     )
-    @PreAuthorize("hasRole(USER)")
+    @PreAuthorize("hasRole('USER')")
     ResponseEntity<ByteArrayResource> downloadFileById(
             @PathVariable("fileId") String fileId,
             Authentication authentication
@@ -62,20 +63,22 @@ public class S3StorageControllerV1 {
 
         long fileIdValue = Long.parseLong(fileId);
 
-        ByteArrayResource byteArrayResource = new ByteArrayResource(s3Storage.downloadFileById(fileIdValue, userName));
+        S3StorageServiceFileDownloadDTO s3Response = s3Storage.downloadFileById(fileIdValue, userName);
+
+        ByteArrayResource byteArrayResource = new ByteArrayResource(s3Response.getData());
 
         return ResponseEntity
                 .status(200)
                 .contentLength(byteArrayResource.contentLength())
                 .header("Content-type","application/octet-stream")
-                .header("Content-disposition", "attachment; fileId=\"" + fileId + "\"")
+                .header("Content-disposition", "attachment; fileName=\"" + s3Response.getFileName() + "\"")
                 .body(byteArrayResource);
     }
 
     @DeleteMapping(
             path = "/{fileId}"
     )
-    @PreAuthorize("hasRole(MODERATOR)")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<FileDeleteResponseDTO> deleteFileById(
             @PathVariable("fileId") String fileId,
             Authentication authentication

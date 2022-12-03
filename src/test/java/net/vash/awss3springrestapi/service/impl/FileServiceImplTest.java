@@ -48,27 +48,6 @@ class FileServiceImplTest {
     }
 
     @Test
-    void addFileForUserByUserNameThrowsExceptionForNullArgs() {
-        assertThrows(IllegalArgumentException.class, () -> fileService.addFileForUserByUserName(file, null));
-        assertThrows(IllegalArgumentException.class, () -> fileService.addFileForUserByUserName(null, "some user name"));
-        assertThrows(IllegalArgumentException.class, () -> fileService.addFileForUserByUserName(null,null));
-
-        verifyNoInteractions(userRepo);
-        verifyNoInteractions(fileRepo);
-    }
-
-    @Test
-    void addFileForUserByUserNameThrowsExceptionForNotExistedUser() {
-        when(userRepo.findByUserName(anyString())).thenReturn(null);
-
-        assertThrows(RuntimeException.class, () -> fileService.addFileForUserByUserName(file, "some_user_name"));
-
-        verify(userRepo, times(1)).findByUserName(anyString());
-        verifyNoMoreInteractions(userRepo);
-        verifyNoInteractions(fileRepo);
-    }
-
-    @Test
     void addFileForUserByUserNameThrowsFileSaveException() {
         when(userRepo.findByUserName(anyString())).thenReturn(tempUser);
         when(fileRepo.save(any(File.class))).thenThrow(RuntimeException.class);

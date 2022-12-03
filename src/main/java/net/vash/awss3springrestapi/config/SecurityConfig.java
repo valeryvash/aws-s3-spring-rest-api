@@ -8,19 +8,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class SecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfig {
 
-    private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
-    private static final String MODERATOR_ENDPOINT = "/api/v1/moder/**";
-    private static final String SIGNUP_ENDPOINT = "/api/v1/auth/signup/";
-    private static final String SIGNIN_ENDPOINT = "/api/v1/auth/signin/";
+    private static final String SIGNUP_ENDPOINT = "/api/v1/auth/signup";
+    private static final String SIGNIN_ENDPOINT = "/api/v1/auth/signin";
     private static final String ADMIN_ROLE = "ADMINISTRATOR";
     private static final String MODER_ROLE = "MODERATOR";
     private static final String USER_ROLE = "USER";
@@ -37,26 +39,6 @@ public class SecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .cors().disable()
-//                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(ADMIN_ENDPOINT).hasRole(ADMIN_ROLE)
-//                .antMatchers(SIGNUP_ENDPOINT).hasRole(ADMIN_ROLE)
-//                .antMatchers(SIGNIN_ENDPOINT).permitAll()
-//                .antMatchers(HttpMethod.POST, MODERATOR_ENDPOINT).hasRole(MODER_ROLE)
-//                .antMatchers(HttpMethod.DELETE, MODERATOR_ENDPOINT).hasRole(MODER_ROLE)
-//                .antMatchers(HttpMethod.GET, MODERATOR_ENDPOINT).hasRole(USER_ROLE)
-//                .anyRequest().authenticated()
-//                .and()
-//                .httpBasic()
-//                .and()
-//                .apply(new JwtConfigurer(jwtTokenProvider))
-//                ;
-//
-//        return http.build();
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
@@ -66,12 +48,8 @@ public class SecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
-                                        .antMatchers(ADMIN_ENDPOINT).hasRole(ADMIN_ROLE)
-                                        .antMatchers(SIGNUP_ENDPOINT).hasRole(ADMIN_ROLE)
+                                        .antMatchers(SIGNUP_ENDPOINT).permitAll()
                                         .antMatchers(SIGNIN_ENDPOINT).permitAll()
-                                        .antMatchers(HttpMethod.POST, MODERATOR_ENDPOINT).hasRole(MODER_ROLE)
-                                        .antMatchers(HttpMethod.DELETE, MODERATOR_ENDPOINT).hasRole(MODER_ROLE)
-                                        .antMatchers(HttpMethod.GET, MODERATOR_ENDPOINT).hasRole(USER_ROLE)
                                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -79,29 +57,6 @@ public class SecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
         ;
 
         return http.build();
-
     }
 
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//                http
-//                .cors().disable()
-//                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(ADMIN_ENDPOINT).hasRole(ADMIN_ROLE)
-//                .antMatchers(SIGNUP_ENDPOINT).hasRole(ADMIN_ROLE)
-//                .antMatchers(SIGNIN_ENDPOINT).permitAll()
-//                .antMatchers(HttpMethod.POST, MODERATOR_ENDPOINT).hasRole(MODER_ROLE)
-//                .antMatchers(HttpMethod.DELETE, MODERATOR_ENDPOINT).hasRole(MODER_ROLE)
-//                .antMatchers(HttpMethod.GET, MODERATOR_ENDPOINT).hasRole(USER_ROLE)
-//                .anyRequest().authenticated()
-//                .and()
-//                .httpBasic()
-//                .and()
-//                .apply(new JwtConfigurer(jwtTokenProvider))
-//                ;
-//    }
 }
