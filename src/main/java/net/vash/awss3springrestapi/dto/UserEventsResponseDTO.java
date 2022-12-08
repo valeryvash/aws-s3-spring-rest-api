@@ -16,10 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class UserEventsResponseDTO implements Serializable {
-//    @NotNull
-//    @NotEmpty
-//    @Min(value = 6, message = "User name shall contain 6 symbols at least")
-//    @Max(value = 16, message = "User name shall not contain more than 16 symbols")
+
     private final String userName;
     private final List<EventDto> events;
 

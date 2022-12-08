@@ -1,28 +1,21 @@
 package net.vash.awss3springrestapi.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.vash.awss3springrestapi.model.File;
 import net.vash.awss3springrestapi.model.User;
 import net.vash.awss3springrestapi.repository.FileRepo;
 import net.vash.awss3springrestapi.repository.UserRepo;
 import net.vash.awss3springrestapi.service.FileService;
-import net.vash.awss3springrestapi.service.exceptions.FileSaveException;
-import net.vash.awss3springrestapi.service.exceptions.UserNotFoundException;
+import net.vash.awss3springrestapi.exceptions.FileSaveException;
 import org.springframework.stereotype.Service;
-
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
-
     private final FileRepo fileRepo;
-
     private final UserRepo userRepo;
-
-    public FileServiceImpl(FileRepo fileRepo, UserRepo userRepo) {
-        this.fileRepo = fileRepo;
-        this.userRepo = userRepo;
-    }
 
     @Override
     public File addFileForUserByUserName(File file, String userName) {

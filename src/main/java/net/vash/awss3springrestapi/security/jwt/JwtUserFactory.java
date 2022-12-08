@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 public class JwtUserFactory {
 
     private static final Status ACTIVE_STATUS = Status.ACTIVE;
-
-    private JwtUserFactory() {
-    }
+    private JwtUserFactory() {}
 
     public static JwtUser create(User user) {
         return new JwtUser(

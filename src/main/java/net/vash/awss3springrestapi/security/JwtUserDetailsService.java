@@ -1,25 +1,21 @@
 package net.vash.awss3springrestapi.security;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.vash.awss3springrestapi.model.User;
 import net.vash.awss3springrestapi.repository.UserRepo;
 import net.vash.awss3springrestapi.security.jwt.JwtUser;
 import net.vash.awss3springrestapi.security.jwt.JwtUserFactory;
-import net.vash.awss3springrestapi.service.exceptions.UserNotFoundException;
+import net.vash.awss3springrestapi.exceptions.UserNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService {
-
     private final UserRepo userRepo;
-
-    public JwtUserDetailsService(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {

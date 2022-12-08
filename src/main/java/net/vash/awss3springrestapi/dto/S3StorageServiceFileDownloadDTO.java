@@ -2,8 +2,6 @@ package net.vash.awss3springrestapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-
 @Getter
 @AllArgsConstructor
 public class S3StorageServiceFileDownloadDTO {

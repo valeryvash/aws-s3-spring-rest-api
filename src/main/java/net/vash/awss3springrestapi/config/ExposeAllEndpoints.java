@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 @Component
-@Slf4j(topic = "Expose all endpoints")
+@Slf4j
 public class ExposeAllEndpoints implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override

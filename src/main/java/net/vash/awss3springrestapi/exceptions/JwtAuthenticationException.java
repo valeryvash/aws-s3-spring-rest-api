@@ -1,4 +1,4 @@
-package net.vash.awss3springrestapi.security.exceptions;
+package net.vash.awss3springrestapi.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 

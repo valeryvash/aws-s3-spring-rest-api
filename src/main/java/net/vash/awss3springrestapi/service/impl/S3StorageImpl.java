@@ -1,17 +1,14 @@
 package net.vash.awss3springrestapi.service.impl;
 
-import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.vash.awss3springrestapi.dto.S3StorageServiceFileDownloadDTO;
+import net.vash.awss3springrestapi.exceptions.*;
 import net.vash.awss3springrestapi.model.EventType;
 import net.vash.awss3springrestapi.model.File;
-import net.vash.awss3springrestapi.security.jwt.JwtUser;
 import net.vash.awss3springrestapi.service.FileService;
 import net.vash.awss3springrestapi.service.S3Storage;
-import net.vash.awss3springrestapi.service.exceptions.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseBytes;
@@ -20,22 +17,16 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class S3StorageImpl implements S3Storage {
     private final S3Client s3Client;
     private final FileService fileService;
     @Value("${vash.bucket.name}")
     private String bucketName;
-
-    public S3StorageImpl(S3Client s3Client, FileService fileService) {
-        this.s3Client = s3Client;
-        this.fileService = fileService;
-    }
 
     @Override
     public File uploadFileForUser(MultipartFile multipartFile, String filePath, String userName) {

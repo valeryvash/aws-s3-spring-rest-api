@@ -1,31 +1,26 @@
 package net.vash.awss3springrestapi.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.vash.awss3springrestapi.model.Role;
 import net.vash.awss3springrestapi.model.User;
 import net.vash.awss3springrestapi.repository.RoleRepo;
 import net.vash.awss3springrestapi.repository.UserRepo;
 import net.vash.awss3springrestapi.service.UserService;
-import net.vash.awss3springrestapi.service.exceptions.FieldsAlreadyExistException;
-import net.vash.awss3springrestapi.service.exceptions.UserDeleteByUserNameException;
-import net.vash.awss3springrestapi.service.exceptions.UserNotFoundException;
+import net.vash.awss3springrestapi.exceptions.FieldsAlreadyExistException;
+import net.vash.awss3springrestapi.exceptions.UserDeleteByUserNameException;
+import net.vash.awss3springrestapi.exceptions.UserNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private static final String DEFAULT_ROLE_NAME = "ROLE_USER";
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public UserServiceImpl(UserRepo userRepo, RoleRepo roleRepo, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepo = userRepo;
-        this.roleRepo = roleRepo;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     @Override
     public User findByUserName(String userName) {

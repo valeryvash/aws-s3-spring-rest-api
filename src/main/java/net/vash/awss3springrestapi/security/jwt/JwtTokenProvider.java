@@ -1,8 +1,9 @@
 package net.vash.awss3springrestapi.security.jwt;
 
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import net.vash.awss3springrestapi.model.Role;
-import net.vash.awss3springrestapi.security.exceptions.JwtAuthenticationException;
+import net.vash.awss3springrestapi.exceptions.JwtAuthenticationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,16 +19,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
-    private final UserDetailsService userDetailsService;
     @Value("${jwt.token.secret}")
     private String SECRET;
     @Value("${jwt.token.expired}")
     private String VALIDITY_IN_MILLISECONDS;
-
-    public JwtTokenProvider(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    private final UserDetailsService userDetailsService;
 
     @PostConstruct
     protected void init() {

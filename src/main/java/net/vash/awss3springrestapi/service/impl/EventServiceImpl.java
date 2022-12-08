@@ -1,23 +1,20 @@
 package net.vash.awss3springrestapi.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.vash.awss3springrestapi.model.Event;
 import net.vash.awss3springrestapi.repository.EventRepo;
 import net.vash.awss3springrestapi.service.EventService;
-import net.vash.awss3springrestapi.service.exceptions.EventRepositoryException;
+import net.vash.awss3springrestapi.exceptions.EventRepositoryException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
-
     private final EventRepo eventRepo;
-
-    public EventServiceImpl(EventRepo eventRepo) {
-        this.eventRepo = eventRepo;
-    }
 
     @Override
     public List<Event> getEventsByUserName(String userName) {

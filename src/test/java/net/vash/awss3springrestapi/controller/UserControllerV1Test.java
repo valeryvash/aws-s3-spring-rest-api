@@ -6,7 +6,7 @@ import net.vash.awss3springrestapi.dto.UserSignUpRequestDTO;
 import net.vash.awss3springrestapi.model.User;
 import net.vash.awss3springrestapi.security.jwt.JwtTokenProvider;
 import net.vash.awss3springrestapi.service.UserService;
-import net.vash.awss3springrestapi.service.exceptions.FieldsAlreadyExistException;
+import net.vash.awss3springrestapi.exceptions.FieldsAlreadyExistException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
