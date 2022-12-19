@@ -2,6 +2,7 @@ package net.vash.awss3springrestapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import net.vash.awss3springrestapi.config.SecurityConfigTest;
 import net.vash.awss3springrestapi.dto.UserSignUpRequestDTO;
 import net.vash.awss3springrestapi.model.User;
 import net.vash.awss3springrestapi.security.jwt.JwtTokenProvider;
@@ -22,7 +23,10 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = UserControllerV1.class)
+@SpringBootTest(classes = {
+        UserControllerV1.class,
+        SecurityConfigTest.class
+})
 class UserControllerV1Test {
     @MockBean
     private UserService userService;

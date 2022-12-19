@@ -1,11 +1,10 @@
 package net.vash.awss3springrestapi.controller;
 
-import lombok.RequiredArgsConstructor;
 import net.vash.awss3springrestapi.dto.FileDeleteResponseDTO;
 import net.vash.awss3springrestapi.dto.FileUploadResponseDTO;
 import net.vash.awss3springrestapi.dto.StorageServiceFileDownloadDTO;
 import net.vash.awss3springrestapi.model.File;
-import net.vash.awss3springrestapi.service.S3Storage;
+import net.vash.awss3springrestapi.service.StorageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,10 +21,8 @@ import software.amazon.awssdk.core.exception.SdkException;
 @RequestMapping(
         path = "/api/v1/files"
 )
-@RequiredArgsConstructor
-public class S3StorageControllerV1 {
-
-    private final S3Storage s3Storage;
+public class FileControllerV1 {
+    private StorageService storageService;
 
     @PostMapping(
             path = "",
@@ -36,10 +33,10 @@ public class S3StorageControllerV1 {
             @RequestParam("file") MultipartFile multipartFile,
             @RequestParam("filePath") String filePath,
             Authentication authentication
-            ) {
+    ) {
         String userName = authentication.getName();
 
-        File uploadFileForUser = s3Storage.uploadFileForUser(multipartFile, filePath, userName);
+        File uploadFileForUser = storageService.uploadFileForUser(multipartFile, filePath, userName);
 
         FileUploadResponseDTO responseDTO = FileUploadResponseDTO.fromEntity(uploadFileForUser);
 
@@ -47,7 +44,6 @@ public class S3StorageControllerV1 {
                 .status(HttpStatus.CREATED)
                 .body(responseDTO);
     }
-
 
     @GetMapping(
             path = "/{fileId}",
@@ -63,7 +59,7 @@ public class S3StorageControllerV1 {
 
         long fileIdValue = Long.parseLong(fileId);
 
-        StorageServiceFileDownloadDTO s3Response = s3Storage.downloadFileById(fileIdValue, userName);
+        StorageServiceFileDownloadDTO s3Response = storageService.downloadFileById(fileIdValue, userName);
 
         ByteArrayResource byteArrayResource = new ByteArrayResource(s3Response.getData());
 
@@ -87,7 +83,7 @@ public class S3StorageControllerV1 {
 
         long fileIdValue = Long.parseLong(fileId);
 
-        File deletedFileInfo = s3Storage.deleteFileById(fileIdValue, userName);
+        File deletedFileInfo = storageService.deleteFileById(fileIdValue, userName);
 
         FileDeleteResponseDTO dto = FileDeleteResponseDTO.fromEntity(deletedFileInfo);
         return ResponseEntity
@@ -121,5 +117,4 @@ public class S3StorageControllerV1 {
                 e.getCause()
         );
     }
-
 }

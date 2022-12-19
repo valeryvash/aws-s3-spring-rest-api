@@ -2,7 +2,7 @@ package net.vash.awss3springrestapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.vash.awss3springrestapi.dto.S3StorageServiceFileDownloadDTO;
+import net.vash.awss3springrestapi.dto.StorageServiceFileDownloadDTO;
 import net.vash.awss3springrestapi.exceptions.*;
 import net.vash.awss3springrestapi.model.EventType;
 import net.vash.awss3springrestapi.model.File;
@@ -67,7 +67,7 @@ public class S3StorageImpl implements S3Storage {
     }
 
     @Override
-    public S3StorageServiceFileDownloadDTO downloadFileById(Long fileId, String userName) {
+    public StorageServiceFileDownloadDTO downloadFileById(Long fileId, String userName) {
         File fileToBeDownloaded = fileService.getFileById(fileId);
 
         if (fileToBeDownloaded == null) {
@@ -90,7 +90,7 @@ public class S3StorageImpl implements S3Storage {
             downloadFileInfo.setFilePath(fileToBeDownloaded.getFilePath());
             downloadFileInfo.getEvent().setEventType(EventType.DOWNLOADED);
             fileService.addFileForUserByUserName(downloadFileInfo, userName);
-            return new S3StorageServiceFileDownloadDTO(responseBytes.asByteArray(),fileToBeDownloaded.getFileName());
+            return new StorageServiceFileDownloadDTO(responseBytes.asByteArray(),fileToBeDownloaded.getFileName());
         } catch (NoSuchKeyException e) {
             log.warn("IN downloadFileById file not found in S3 storage fileId {} fileKey {} ", fileId, fileKey);
             e.printStackTrace();

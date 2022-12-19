@@ -35,7 +35,10 @@ public class UserControllerV1 {
 
     private final AuthenticationManager authenticationManager;
 
-    public UserControllerV1(UserService userService, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager) {
+    public UserControllerV1(UserService userService,
+                            JwtTokenProvider jwtTokenProvider,
+                            AuthenticationManager authenticationManager
+    ) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
@@ -66,7 +69,6 @@ public class UserControllerV1 {
         } catch (FieldsAlreadyExistException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    /* TODO User need to know which parameters need to be changed */
                     "Looks like some parameters already exist in persistent context"
             );
         }

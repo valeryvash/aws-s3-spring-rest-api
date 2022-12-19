@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 @Getter
 @AllArgsConstructor
-public class S3StorageServiceFileDownloadDTO {
+public class StorageServiceFileDownloadDTO {
     private final byte[] data;
     private final String fileName;
 
