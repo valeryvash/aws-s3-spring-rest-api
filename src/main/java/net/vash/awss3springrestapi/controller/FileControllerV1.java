@@ -1,5 +1,6 @@
 package net.vash.awss3springrestapi.controller;
 
+import lombok.RequiredArgsConstructor;
 import net.vash.awss3springrestapi.dto.FileDeleteResponseDTO;
 import net.vash.awss3springrestapi.dto.FileUploadResponseDTO;
 import net.vash.awss3springrestapi.dto.StorageServiceFileDownloadDTO;
@@ -21,8 +22,9 @@ import software.amazon.awssdk.core.exception.SdkException;
 @RequestMapping(
         path = "/api/v1/files"
 )
+@RequiredArgsConstructor
 public class FileControllerV1 {
-    private StorageService storageService;
+    private final StorageService storageService;
 
     @PostMapping(
             path = "",

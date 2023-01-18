@@ -2,14 +2,14 @@ package net.vash.awss3springrestapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.vash.awss3springrestapi.exceptions.FieldsAlreadyExistException;
+import net.vash.awss3springrestapi.exceptions.UserDeleteByUserNameException;
+import net.vash.awss3springrestapi.exceptions.UserNotFoundException;
 import net.vash.awss3springrestapi.model.Role;
 import net.vash.awss3springrestapi.model.User;
 import net.vash.awss3springrestapi.repository.RoleRepo;
 import net.vash.awss3springrestapi.repository.UserRepo;
 import net.vash.awss3springrestapi.service.UserService;
-import net.vash.awss3springrestapi.exceptions.FieldsAlreadyExistException;
-import net.vash.awss3springrestapi.exceptions.UserDeleteByUserNameException;
-import net.vash.awss3springrestapi.exceptions.UserNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

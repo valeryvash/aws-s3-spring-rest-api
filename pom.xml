@@ -85,6 +85,15 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>integration test</id>
+        </profile>
+        <profile>
+            <id>mutation test</id>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>

@@ -20,9 +20,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -59,12 +62,12 @@ class EventControllerV1Test {
                 .apply(springSecurity())
                 .build();
 
-        events = List.of(
+        events = Stream.of(
                 new Event(1L, EventType.CREATED, new Date(), null, new File(1L, "f1", "f1", null)),
                 new Event(2L, EventType.DOWNLOADED, new Date(), null, new File(2L, "f1", "f1", null)),
                 new Event(3L, EventType.DELETED, new Date(), null, new File(3L, "f1", "f1", null)),
                 new Event(4L, EventType.DOWNLOADED, new Date(), null, new File(4L, "f2", "f2", null))
-        );
+        ).collect(Collectors.toList());
 
         strings = List.of("1", "3", "event", "anotherString", "null", "abcdef");
 
@@ -109,7 +112,7 @@ class EventControllerV1Test {
 
         user.setEvents(events);
 
-        when(eventService.getEventsByUserName("someName"))
+        when(eventService.getEventsByUserName(anyString()))
                 .thenReturn(events);
 
         mockMvc
